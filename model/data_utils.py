@@ -401,62 +401,19 @@ def get_chunks(seq, tags):
     chunks = []
     chunk_type, chunk_start = None, None
 
-    for i, tok in enumerate(seq):
-        if tok == default:
-            if chunk_type is not None:
-                chunk_type, chunk_start = None, None
-            else:
-                pass
-        else:
-            tok_class, tok_chunk_type = get_chunk_type(tok, idx_to_tag)
-            if tok_class == 'S':
-                chunk = (tok_chunk_type, i, i+1)
-                chunks.append(chunk)
-                chunk_type, chunk_start = None, None
-            if tok_class == 'B':
-                chunk_start = i
-                chunk_type = tok_chunk_type
-            if tok_class == 'I':
-                if chunk_type is not None:
-                    if chunk_type == tok_chunk_type:
-                        pass
-                    else:
-                        chunk_type, chunk_start = None, None
-                else:
-                    pass
-            if tok_class == 'E':
-                if chunk_type is not None:
-                    if chunk_type == tok_chunk_type:
-                        chunk = (chunk_type, chunk_start, i+1)
-                        chunks.append(chunk)
-                        chunk_type, chunk_start = None, None
-                    else:
-                        chunk_type, chunk_start = None, None
-                else:
-                    pass
-    return chunks
-
     # for i, tok in enumerate(seq):
     #     if tok == default:
     #         if chunk_type is not None:
-    #             chunk = (chunk_type, chunk_start, i)
-    #             chunks.append(chunk)
     #             chunk_type, chunk_start = None, None
     #         else:
     #             pass
     #     else:
     #         tok_class, tok_chunk_type = get_chunk_type(tok, idx_to_tag)
     #         if tok_class == 'S':
-    #             if chunk_type is not None:
-    #                 chunk = (chunk_type, chunk_start, i)
-    #                 chunks.append(chunk)
-    #             chunk = (tok_chunk_type, i, i + 1)
+    #             chunk = (tok_chunk_type, i, i+1)
     #             chunks.append(chunk)
     #             chunk_type, chunk_start = None, None
     #         if tok_class == 'B':
-    #             if chunk_type is not None:
-    #                 chunk = (chunk_type, chunk_start, i)
-    #                 chunks.append(chunk)
     #             chunk_start = i
     #             chunk_type = tok_chunk_type
     #         if tok_class == 'I':
@@ -464,22 +421,65 @@ def get_chunks(seq, tags):
     #                 if chunk_type == tok_chunk_type:
     #                     pass
     #                 else:
-    #                     chunk = (chunk_type, chunk_start, i)
-    #                     chunks.append(chunk)
     #                     chunk_type, chunk_start = None, None
     #             else:
     #                 pass
     #         if tok_class == 'E':
     #             if chunk_type is not None:
     #                 if chunk_type == tok_chunk_type:
-    #                     chunk = (chunk_type, chunk_start, i + 1)
+    #                     chunk = (chunk_type, chunk_start, i+1)
     #                     chunks.append(chunk)
     #                     chunk_type, chunk_start = None, None
     #                 else:
-    #                     chunk = (chunk_type, chunk_start, i)
-    #                     chunks.append(chunk)
     #                     chunk_type, chunk_start = None, None
     #             else:
     #                 pass
     # return chunks
+
+    for i, tok in enumerate(seq):
+        if tok == default:
+            if chunk_type is not None:
+                chunk = (chunk_type, chunk_start, i)
+                chunks.append(chunk)
+                chunk_type, chunk_start = None, None
+            else:
+                pass
+        else:
+            tok_class, tok_chunk_type = get_chunk_type(tok, idx_to_tag)
+            if tok_class == 'S':
+                if chunk_type is not None:
+                    chunk = (chunk_type, chunk_start, i)
+                    chunks.append(chunk)
+                chunk = (tok_chunk_type, i, i + 1)
+                chunks.append(chunk)
+                chunk_type, chunk_start = None, None
+            if tok_class == 'B':
+                if chunk_type is not None:
+                    chunk = (chunk_type, chunk_start, i)
+                    chunks.append(chunk)
+                chunk_start = i
+                chunk_type = tok_chunk_type
+            if tok_class == 'I':
+                if chunk_type is not None:
+                    if chunk_type == tok_chunk_type:
+                        pass
+                    else:
+                        chunk = (chunk_type, chunk_start, i)
+                        chunks.append(chunk)
+                        chunk_type, chunk_start = None, None
+                else:
+                    pass
+            if tok_class == 'E':
+                if chunk_type is not None:
+                    if chunk_type == tok_chunk_type:
+                        chunk = (chunk_type, chunk_start, i + 1)
+                        chunks.append(chunk)
+                        chunk_type, chunk_start = None, None
+                    else:
+                        chunk = (chunk_type, chunk_start, i)
+                        chunks.append(chunk)
+                        chunk_type, chunk_start = None, None
+                else:
+                    pass
+    return chunks
 
